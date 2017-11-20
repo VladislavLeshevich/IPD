@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Text.RegularExpressions;
@@ -39,20 +38,20 @@ namespace WMI
             return listDeviceInfo;
         }
 
-        private DeviceInfo FindDeviceInText(string dev, string ven)
+        private static DeviceInfo FindDeviceInText(string dev, string ven)
         {
-            var filePCI = new StreamReader("pci_ids.txt");
+            var filePci = new StreamReader("pci_ids.txt");
             var vendor = new Regex("^" + ven + "  ");
             var device = new Regex("^\\t" + dev + "  ");
 
-            while (!filePCI.EndOfStream)
+            while (!filePci.EndOfStream)
             {
-                var vendorText = filePCI.ReadLine();
+                var vendorText = filePci.ReadLine();
                 if (vendorText != null && vendor.Match(vendorText).Success)
                 {
-                    while (!filePCI.EndOfStream)
+                    while (!filePci.EndOfStream)
                     {
-                        var deviceText = filePCI.ReadLine();
+                        var deviceText = filePci.ReadLine();
                         if (deviceText == null || !device.Match(deviceText).Success)
                             continue;
                         return new DeviceInfo(deviceText.Substring(7), vendorText.Substring(6));                                            
